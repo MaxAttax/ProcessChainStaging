@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="resourcegroup")
 public class ResourceGroup {
-	private Project project;
+	private Source source;
 	private Integer resourceGroupId;
 	private String label;
 	private String description;
@@ -36,13 +36,13 @@ public class ResourceGroup {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "ProjectId", nullable = true)
-	public Project getProject() {
-		return this.project;
+	@JoinColumn(name = "SourceId", nullable = true)
+	public Source getSource() {
+		return this.source;
 	}
 	
-	public void setProject(Project project) {
-		this.project = project;
+	public void setSource(Source source) {
+		this.source = source;
 	}
 	
 	/*

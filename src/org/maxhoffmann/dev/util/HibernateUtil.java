@@ -6,7 +6,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.maxhoffmann.dev.ProductionAnalysisAnnotation.Material;
 import org.maxhoffmann.dev.ProductionAnalysisAnnotation.Order;
 import org.maxhoffmann.dev.ProductionAnalysisAnnotation.ProductionOrderHistory;
-import org.maxhoffmann.dev.ProductionAnalysisAnnotation.Project;
+import org.maxhoffmann.dev.ProductionAnalysisAnnotation.Source;
 import org.maxhoffmann.dev.ProductionAnalysisAnnotation.ResourceGroup;
 
 
@@ -19,7 +19,7 @@ public class HibernateUtil {
 			sessionFactory = new AnnotationConfiguration()
 								 .configure()
 								 .addPackage("org.maxhoffmann.dev.ProductionAnalysisAnnotation")
-								 .addAnnotatedClass(Project.class)
+								 .addAnnotatedClass(Source.class)
 								 .addAnnotatedClass(Material.class)
 								 .addAnnotatedClass(Order.class)
 								 .addAnnotatedClass(ResourceGroup.class)

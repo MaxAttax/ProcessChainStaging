@@ -14,12 +14,13 @@ public class ResourceGroupDAO {
 	private static final Logger LOGGER = Logger.getLogger(ResourceGroupDAO.class);
 	
 	@SuppressWarnings("unchecked")
-	public void listResourceGroups() {
+	public void listResourceGroups(int whereSourceId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transaction = null;
 		try {
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from ResourceGroup");
+			Query query = session.createQuery("from ResourceGroup where sourceId = :sourceId");
+			query.setParameter("sourceId", whereSourceId);
 			List<ResourceGroup> resourceGroups = query.list();
 			LOGGER.info("\n");
 			
@@ -29,11 +30,12 @@ public class ResourceGroupDAO {
 				 * the get method command has to call the getId() method of the class project
 				 */
 				int resourceGroupId = resourceGroup.getResourceGroupId();
-				int projectId = resourceGroup.getProject().getId();
+				int sourceId = resourceGroup.getSource().getId();
 				String label = resourceGroup.getLabel();
 				String description = resourceGroup.getDescription();
-				LOGGER.info("ID: " + resourceGroupId + "  Projekt-ID: " + projectId
-						+ "  Label: " + label + "  Description: " + description);
+				LOGGER.info("ID: " + resourceGroupId 
+						+ "\t  Source-ID: " + sourceId
+						+ "    Label: " + label + "    Description: " + description);
 			}
 			transaction.commit();
 		} catch ( HibernateException e ) {
@@ -44,20 +46,20 @@ public class ResourceGroupDAO {
 		}
 	}
 	
-	public void addResourceGroup(String description, String label, Integer projectId) {
+	public void addResourceGroup(String description, String label, Integer soruceId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transaction = null;
 		try {
 			transaction = session.beginTransaction();
-			Project project = new Project();			// An empty project has to be initialized in order to to
+			Source source = new Source();			// An empty project has to be initialized in order to to
 														// add the foreign key constraint of the project to the ResourceGroup
 			
 			ResourceGroup newResourceGroup = new ResourceGroup();
 			newResourceGroup.setDescription(description);
 			newResourceGroup.setLabel(label);
 			
-			newResourceGroup.setProject(project);		// Add the project property to ResourceGroup -> ProjectId constraint
-			project.setId(projectId);					// assign a certain projectId (type long) to the added project
+			newResourceGroup.setSource(source); 		// Add the project property to ResourceGroup -> ProjectId constraint
+			// source.setId(sourceId);						// assign a certain projectId (type long) to the added project
 			
 			session.save(newResourceGroup);				// save the new data set
 			transaction.commit();						// commit the transaction execution to the database

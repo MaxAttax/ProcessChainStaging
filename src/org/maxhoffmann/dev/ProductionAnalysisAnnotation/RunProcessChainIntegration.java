@@ -1,5 +1,6 @@
 package org.maxhoffmann.dev.ProductionAnalysisAnnotation;
 
+import org.apache.log4j.Logger;
 import org.maxhoffmann.dev.Chain.ProcessChainGeneration;
 import org.maxhoffmann.dev.Chain.ProcessChainCounter;
 import org.maxhoffmann.dev.Chain.ProcessChainMainOperations;
@@ -14,21 +15,26 @@ import java.util.List;
 import java.util.Set;
 
 public class RunProcessChainIntegration {
+	
+	private static final Logger LOGGER = Logger
+			.getLogger(RunProcessChainIntegration.class);
 
 	public static void main(String[] args) {
-
+		
 		System.out.println("Let's start the Analysis!\n");
+		
+		int sourceId = 14;
 
-		ProjectDAO projectDAO = new ProjectDAO();
+		SourceDAO sourceDAO = new SourceDAO();
 		MaterialDAO materialDAO = new MaterialDAO();
 		OrderDAO orderDAO = new OrderDAO();
 		ResourceGroupDAO resourceGroupDAO = new ResourceGroupDAO();
 		ProductionOrderHistoryDAO productionOrderHistoryDAO = new ProductionOrderHistoryDAO();
 
-		projectDAO.listProjects();
-		materialDAO.listMaterial();
-		orderDAO.listOrders();
-		resourceGroupDAO.listResourceGroups();
+		sourceDAO.listSources();
+		materialDAO.listMaterial(sourceId);
+		orderDAO.listOrders(sourceId);
+		resourceGroupDAO.listResourceGroups(sourceId);
 
 		List<ProductionOrderHistory> pohResult = productionOrderHistoryDAO
 				.listProductionOrderHistories();
@@ -57,7 +63,12 @@ public class RunProcessChainIntegration {
 		
 		Set<ProcessChainObject> currentWorkingChains = 
 				chainCounter.ProcessChainOperations(generatedChains, sortAlgorithm, numMainChains);
-
+		
+		if ( numMainChains > currentWorkingChains.size() ) {
+			LOGGER.info("The number of main Chains ('" + numMainChains + "') determined by the user is unappropriate!\n" +
+					"It has automatically been set to '" + currentWorkingChains.size() + "' in order to perform the calculation!");
+			numMainChains = currentWorkingChains.size();
+		}
 		
 		for ( int iterationNum = 0; iterationNum < numMainChains; iterationNum++) {
 			

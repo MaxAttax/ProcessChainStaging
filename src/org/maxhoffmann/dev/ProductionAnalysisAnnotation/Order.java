@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="`order`")					// The ` signs are necessary because 'order' is a keyword in SQL...
 public class Order {
+	private Source source;
 	private Material material;
 	private int orderId;
 	private int orderNo;
@@ -43,6 +44,16 @@ public class Order {
 	
 	public void setMaterial (Material material) {
 		this.material = material;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "SourceId", nullable = true)
+	public Source getSource() {
+		return this.source;
+	}
+	
+	public void setSource(Source source) {
+		this.source = source;
 	}
 	
 	@Column(name="OrderNo")

@@ -10,33 +10,39 @@ import org.hibernate.Transaction;
 import org.maxhoffmann.dev.util.HibernateUtil;
 
 public class OrderDAO {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(OrderDAO.class);
-	
+
 	@SuppressWarnings("unchecked")
-	public void listOrders() {
+	public void listOrders(int whereSourceId) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transaction = null;
 		try {
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Order");
+			Query query = session.createQuery("from Order where sourceId = :sourceId");
+			query.setParameter("sourceId", whereSourceId);
 			query.setMaxResults(10);
 			List<Order> orders = query.list();
 			LOGGER.info("\n");
-			for ( Order order : orders ) {
-				Integer orderId = order.getOrderId();
-				Integer materialId = order.getMaterial().getId();
-				Integer orderNo = order.getOrderNo();
+			for (Order order : orders) {
+				int orderId = order.getOrderId();
+				int sourceId = order.getSource().getId();
+				int materialId = order.getMaterial().getId();
+				int orderNo = order.getOrderNo();
 				String orderType = order.getOrderType();
-				LOGGER.info("ID: " + orderId + "  Order No: " + orderNo + "  Order Type: " + orderType + "  Material ID (FK): " + materialId);
+				LOGGER.info("ID:\t" + orderId
+						+ "\t  Source Id:\t" + sourceId
+						+ "\t  Order No:  " + orderNo
+						+ "\t  Order Type:  " + orderType 
+						+ "\t  Material ID (FK):  " + materialId);
 			}
 			transaction.commit();
-		} catch ( HibernateException e ) {
+		} catch (HibernateException e) {
 			transaction.rollback();
 			e.printStackTrace();
 		} finally {
 			session.close();
 		}
 	}
-	
+
 }

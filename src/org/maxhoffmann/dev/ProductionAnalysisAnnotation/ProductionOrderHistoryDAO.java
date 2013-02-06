@@ -1,8 +1,9 @@
 package org.maxhoffmann.dev.ProductionAnalysisAnnotation;
 
+import java.util.Date;
 import java.util.List;
 
-// import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,7 +12,7 @@ import org.maxhoffmann.dev.util.HibernateUtil;
 
 public class ProductionOrderHistoryDAO {
 	
-	// private static final Logger LOGGER = Logger.getLogger(ProductionOrderHistoryDAO.class);
+	private static final Logger LOGGER = Logger.getLogger(ProductionOrderHistoryDAO.class);
 	
 	@SuppressWarnings("unchecked")
 	public List<ProductionOrderHistory> listProductionOrderHistories() {
@@ -24,27 +25,27 @@ public class ProductionOrderHistoryDAO {
 			query.setMaxResults(600);
 			List<ProductionOrderHistory> productionOrderHistories = query.list();
 			productionOrderResult = productionOrderHistories;
-			/*
 			LOGGER.info("\n");
 			for ( ProductionOrderHistory productionOrderHistory : productionOrderHistories ) {
 				int productionOrderHistoryId = productionOrderHistory.getProductionOrderHistoryId();
+				int sourceId = productionOrderHistory.getSource().getId();
 				int workplanNo = productionOrderHistory.getWorkplanNo();
-				Date startProduction = productionOrderHistory.getStartProduction();
+				Date startProduction = productionOrderHistory.getStartDate();
 				double operationTime = productionOrderHistory.getOperationTime();
 				int orderId = productionOrderHistory.getOrder().getOrderId();
 				int resourceGroupId = productionOrderHistory.getResourceGroup().getResourceGroupId();
 				String resourceGroupLabel = productionOrderHistory.getResourceGroup().getLabel();
 				LOGGER.info("ID: " + productionOrderHistoryId 
-						+ "  Workplan No.: " + workplanNo 
-						+ "  Start Production: " + startProduction
-						+ "  Operation Time: " + operationTime 
-						+ "  Order-ID: " + orderId 
-						+ "  Order-No: " + productionOrderHistory.getOrder().getOrderNo()   
+						+ "\t  Source-Id: " + sourceId 
+						+ "\t   Workplan No.:" + workplanNo 
+						+ "\tStart Production: " + startProduction
+						+ "   Operation Time:" + operationTime 
+						+ "\t  Order-ID: " + orderId 
+						+ "  \tOrder-No: " + productionOrderHistory.getOrder().getOrderNo()   
 						+ "  ResourceGroup-ID: " + resourceGroupId
 						+ "  ResourceGroup-Label: " + resourceGroupLabel);
 			}
 			LOGGER.info("\n");
-			*/
 		} catch ( HibernateException e ) {
 			transaction.rollback();
 			e.printStackTrace();

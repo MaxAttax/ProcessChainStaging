@@ -8,27 +8,27 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import org.maxhoffmann.dev.ProductionAnalysisAnnotation.Project;
+import org.maxhoffmann.dev.ProductionAnalysisAnnotation.Source;
 import org.maxhoffmann.dev.util.HibernateUtil;
 
 
-public class ProjectDAO {
+public class SourceDAO {
 	
-	private static final Logger LOGGER = Logger.getLogger(ProjectDAO.class);
+	private static final Logger LOGGER = Logger.getLogger(SourceDAO.class);
 	
 	@SuppressWarnings("unchecked")
-	public void listProjects() {
+	public void listSources() {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transaction = null;
 		try {
 			transaction = session.beginTransaction();
-			Query query = session.createQuery("from Project");
-			List<Project> projects = query.list();
+			Query query = session.createQuery("from Source");
+			List<Source> sources = query.list();
 			LOGGER.info("\n");
-			for (Project project : projects) {
-				int ProjectId = project.getId();
-				String projectStatus = project.getStatus();
-				LOGGER.info("ID: " + ProjectId + "  Projektstatus: " + projectStatus);
+			for (Source source : sources) {
+				int sourceId = source.getId();
+				String sourceStatus = source.getStatus();
+				LOGGER.info("ID:\t" + sourceId + "\t  Source-Status:   " + sourceStatus);
 			}
 			transaction.commit();
 		} catch ( HibernateException e) {
@@ -39,13 +39,13 @@ public class ProjectDAO {
 		}
 	}
 	
-	public Integer addProject(String projectName) {
+	public Integer addSource(String projectName) {
 		Session sessionAdd = HibernateUtil.getSessionFactory().openSession();
 		Transaction transactionAdd = null;
 		Integer newProjectId = null;
 		try {
 			transactionAdd = sessionAdd.beginTransaction();
-			Project addStatus = new Project();
+			Source addStatus = new Source();
 			addStatus.setStatus(projectName);
 			newProjectId = (Integer) sessionAdd.save(addStatus);
 			transactionAdd.commit();
@@ -63,7 +63,7 @@ public class ProjectDAO {
 		Transaction transactionDelete = null;
 		try {
 			transactionDelete = sessionDelete.beginTransaction();
-			Project projectDelete = (Project) sessionDelete.get(Project.class, deleteProjectId);
+			Source projectDelete = (Source) sessionDelete.get(Source.class, deleteProjectId);
 			sessionDelete.delete(projectDelete);
 			transactionDelete.commit();
 		} catch ( HibernateException e ) {

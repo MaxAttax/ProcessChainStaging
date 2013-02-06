@@ -16,10 +16,11 @@ public class ProductionOrderHistory {
 	
 	private int ProductionOrderHistoryId;
 	private int workplanNo;
-	private Date startProduction;
+	private Date startDate;
 	private double operationTime;
 	private Order order;
 	private ResourceGroup resourceGroup;
+	private Source source;
 	
 	@Id
 	@GeneratedValue
@@ -41,13 +42,13 @@ public class ProductionOrderHistory {
 		this.workplanNo = workplanNo;
 	}
 	
-	@Column(name = "StartProduction")
-	public Date getStartProduction() {
-		return this.startProduction;
+	@Column(name = "StartDate")
+	public Date getStartDate() {
+		return this.startDate;
 	}
 	
-	public void setStartProduction(Date startProduction) {
-		this.startProduction = startProduction;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 	
 	@Column(name = "OperationTime") 
@@ -79,13 +80,14 @@ public class ProductionOrderHistory {
 		this.resourceGroup = resourceGroup;
 	}
 	
+	@ManyToOne
+	@JoinColumn(name = "SourceId", nullable = true)
+	public Source getSource() {
+		return this.source;
+	}
+	
+	public void setSource(Source source) {
+		this.source = source;
+	}
+	
 }
-
-
-
-
-
-
-
-
-
